@@ -2,6 +2,13 @@
 
 A curated study repository for software-engineer interview preparation covering Java, OOP & design, DSA, concurrency, system design, backend architecture, and supporting resources.
 
+## 📊 Interactive Competency Rubric
+I have developed a custom, interactive self-assessment tool to track my readiness across various engineering pillars. 
+
+**[🔗 Open Interactive Rubric](https://karthikreddy-7.github.io/SDE-Prep/SDE-2%20SELF-ASSESSMENT%20RUBRIC.html)**
+
+> **Note:** Your scores are saved locally to your browser.
+
 ## Repository Structure
 
 - `01-java-core/`: Core Java topics with `examples/`, `notes/`, and `pitfalls/`.
@@ -22,10 +29,6 @@ A curated study repository for software-engineer interview preparation covering 
 - Browse folders by topic and follow the suggested order in `03-dsa/` for algorithm practice.
 - Each topic folder typically contains notes, examples, and common pitfalls — start with `notes/` then `examples/`.
 - To add content: create a branch, add files in the appropriate folder, include a short README or notes file, and open a pull request describing changes.
-
-## Quick Links
-
-- Open the interactive rubric in your browser from the repo: [SDE-2 SELF-ASSESSMENT RUBRIC.html](https://karthikreddy-7.github.io/SDE-Prep/SDE-2%20SELF-ASSESSMENT%20RUBRIC.html)
 
 ## Conventions
 

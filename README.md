@@ -23,6 +23,10 @@ A curated study repository for software-engineer interview preparation covering 
 - Each topic folder typically contains notes, examples, and common pitfalls — start with `notes/` then `examples/`.
 - To add content: create a branch, add files in the appropriate folder, include a short README or notes file, and open a pull request describing changes.
 
+## Quick Links
+
+- Open the interactive rubric in your browser from the repo: [SDE-2 SELF-ASSESSMENT RUBRIC.html](SDE-2%20SELF-ASSESSMENT%20RUBRIC.html)
+
 ## Conventions
 
 - Use clear, descriptive file and folder names.

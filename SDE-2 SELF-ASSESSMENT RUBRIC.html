@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SDE-2 Self-Assessment Rubric — Interactive</title>
+  <style>
+    :root{--bg:#f7fafc;--card:#ffffff;--muted:#52606d;--accent:#0ea5a4;--accent-600:#0b9489;--danger:#ef4444}
+    html,body{height:100%}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial;margin:0;background:linear-gradient(180deg,#fbfdfe,#f3f7f9);color:#0f1724}
+    .container{max-width:980px;margin:28px auto;padding:24px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    header h1{margin:0;font-size:1.25rem}
+    .meta{color:var(--muted);font-size:0.95rem;margin-top:6px}
+    .topbar{display:flex;gap:10px;align-items:center}
+    .summary-badge{display:inline-block;margin:6px 10px;padding:6px 10px;border-radius:6px;background:#f8fafc;border:1px solid #edf2f7;color:#0f1724}
+    .legend{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+    .legend-item{background:rgba(14,165,164,0.06);padding:8px 10px;border-radius:8px;border:1px solid rgba(14,165,164,0.12);color:#08343a;font-size:0.92rem}
+    .legend-item.low{background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.12);color:#5b1212}
+    .legend-item.mid{background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.12);color:#5a3810}
+    .category{border:1px solid rgba(15,23,36,0.06);border-radius:12px;padding:14px;margin:14px 0;background:var(--card);box-shadow:0 6px 18px rgba(12,20,30,0.04)}
+    .cat-header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .cat-title{font-weight:600}
+    .badge{background:#f1f5f9;padding:6px 10px;border-radius:999px;color:#0f1724;font-size:0.9rem}
+    .items{margin-top:12px}
+    .item{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid rgba(15,23,36,0.03)}
+    .item:first-child{border-top:none}
+    label.name{flex:1}
+    .score-controls{display:flex;gap:8px;align-items:center}
+    .score-controls label{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:transparent;border:1px solid transparent}
+    .score-controls input{width:1.6rem;height:1.6rem}
+    .cat-footer{display:flex;align-items:center;gap:12px;margin-top:12px}
+    .cat-score{font-weight:600;color:#0f1724}
+    .progress{flex:1;height:10px;background:linear-gradient(90deg,#eef2f6,#f8fafc);border-radius:999px;overflow:hidden}
+    .progress-fill{height:100%;background:var(--accent);width:0%;transition:width .35s ease}
+    .actions{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+    button{padding:9px 14px;border-radius:10px;border:1px solid rgba(15,23,36,0.06);background:#fff;color:#0f1724;cursor:pointer;box-shadow:0 2px 6px rgba(11,22,33,0.03)}
+    button.primary{background:var(--accent);color:white;border:none}
+    button.ghost{background:transparent;border:1px solid rgba(15,23,36,0.06)}
+    .result{margin-top:14px;padding:14px;border-radius:10px;background:linear-gradient(180deg,#ffffff,#fbfeff);border:1px solid rgba(15,23,36,0.04)}
+    footer{margin-top:18px;color:var(--muted);font-size:0.9rem}
+    @media (prefers-color-scheme:dark){:root{--bg:#071024;--card:#071226;--muted:#9fb3d6} body{background:linear-gradient(180deg,#041427,#06192b);color:#dbeafe} .container{background:transparent} .category{background:linear-gradient(180deg,#042033,#05213a);border-color:rgba(255,255,255,0.03)} .result{background:linear-gradient(180deg,#041427,#052033)} .badge{background:rgba(255,255,255,0.03)}}
+    @media (max-width:720px){.container{padding:14px;margin:14px} .cat-header{flex-direction:column;align-items:flex-start;gap:8px} .cat-footer{flex-direction:column;align-items:flex-start}}
+    @media print{button,.actions,input[type=file],#openMd{display:none} body{margin:0} .category{page-break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>SDE-2 Self-Assessment Rubric — Interactive</h1>
+        <div class="meta">Rate each item 0–3. Scores update live and save locally.</div>
+        <div class="legend" aria-hidden="false">
+          <div class="legend-item low"><strong>0</strong> — Don’t understand</div>
+          <div class="legend-item mid"><strong>1</strong> — Understand but can't articulate</div>
+          <div class="legend-item"><strong>2</strong> — Explain with confidence</div>
+          <div class="legend-item"><strong>3</strong> — Explain, defend, and apply</div>
+        </div>
+      </div>
+      <div class="topbar">
+        <button id="reset" class="ghost">Reset</button>
+      </div>
+    </header>
+
+    <main id="rubric"></main>
+
+    <div id="result" class="result" aria-live="polite"></div>
+
+    <footer></footer>
+  </div>
+
+  <script>
+    const rubricData = [
+      { key:'java', title:'Java Core & JVM', max:30, target:22, items:[
+        'JVM memory model (heap, stack, metaspace)',
+        'Object lifecycle & GC triggers',
+        'equals / hashCode contract',
+        'Collections internals (HashMap, ArrayList)',
+        'Immutability & defensive copying',
+        'Generics & type erasure',
+        'Exception hierarchy & usage',
+        'Performance implications of choices',
+        'Java 8+ features (Streams, Optional)',
+        'JVM vs language-level concepts'
+      ]},
+      { key:'dsa', title:'DSA & Problem Solving', max:30, target:20, items:[
+        'Pattern recognition',
+        'Arrays & Strings',
+        'Linked Lists',
+        'Stack / Queue',
+        'Trees (DFS, BFS, LCA)',
+        'Graphs (BFS, DFS, topo)',
+        'Recursion & Backtracking',
+        'Dynamic Programming',
+        'Time/Space tradeoffs',
+        'Explaining approach clearly'
+      ]},
+      { key:'concurrency', title:'Concurrency & Multithreading', max:21, target:14, items:[
+        'Thread lifecycle',
+        'synchronized internals',
+        'Locks vs synchronized',
+        'Java Memory Model',
+        'Visibility vs atomicity',
+        'Executors & thread pools',
+        'Concurrency bug reasoning'
+      ]},
+      { key:'lld', title:'Low-Level Design (LLD)', max:24, target:16, items:[
+        'Requirement clarification',
+        'Entity identification',
+        'Responsibility allocation',
+        'SOLID principles',
+        'Design patterns usage',
+        'Handling future extensibility',
+        'Code cleanliness',
+        'Explaining tradeoffs'
+      ]},
+      { key:'hld', title:'High-Level Design (HLD)', max:21, target:15, items:[
+        'Requirement gathering',
+        'Component decomposition',
+        'Scalability reasoning',
+        'Caching strategies',
+        'Consistency tradeoffs',
+        'Bottleneck identification',
+        'Failure handling'
+      ]},
+      { key:'backend', title:'Databases & Backend Fundamentals', max:18, target:13, items:[
+        'Indexing & query optimization',
+        'Transactions & isolation',
+        'SQL vs NoSQL tradeoffs',
+        'REST API design',
+        'Caching & idempotency',
+        'Messaging basics'
+      ]}
+    ];
+
+    const STORAGE_KEY = 'sde2_rubric_v1';
+
+    function build() {
+      const container = document.getElementById('rubric');
+      container.innerHTML = '';
+        rubricData.forEach(cat => {
+          const catDiv = document.createElement('div');
+          catDiv.className = 'category';
+          catDiv.dataset.key = cat.key;
+          catDiv.innerHTML = `<div class="cat-header"><div class="cat-title">${cat.title}</div><div class="badge">Target: ${cat.target} • Max: ${cat.max}</div></div>`;
+          const itemsDiv = document.createElement('div');
+          itemsDiv.className = 'items';
+          cat.items.forEach((name, idx) => {
+            const id = `${cat.key}_${idx}`;
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.innerHTML = `<label class="name" for="${id}">${name}</label><div class="score-controls">${[0,1,2,3].map(v=>`<label><input name="${id}" type="radio" value="${v}"> ${v}</label>`).join('')}</div>`;
+            itemsDiv.appendChild(item);
+          });
+          catDiv.appendChild(itemsDiv);
+          const footer = document.createElement('div');
+          footer.className = 'cat-footer';
+          footer.innerHTML = `<div class="cat-score">0 / ${cat.max}</div><div class="progress"><div class="progress-fill" style="width:0%"></div></div>`;
+          catDiv.appendChild(footer);
+          container.appendChild(catDiv);
+        });
+
+      // attach listeners
+      Array.from(document.querySelectorAll('input[type=radio]')).forEach(inp => inp.addEventListener('change', compute));
+    }
+
+    function compute() {
+      const state = loadState();
+      let total = 0, maxTotal = 0, targetTotal = 0;
+      const breakdown = [];
+      rubricData.forEach(cat => {
+        let catScore = 0;
+        cat.items.forEach((it, idx) => {
+          const name = `${cat.key}_${idx}`;
+          const sel = document.querySelector(`input[name="${name}"]:checked`);
+          const val = sel ? Number(sel.value) : 0;
+          catScore += val;
+        });
+        breakdown.push({key:cat.key,score:catScore,max:cat.max,target:cat.target});
+        total += catScore;
+        maxTotal += cat.max;
+        targetTotal += cat.target;
+      });
+
+      saveState();
+
+      const result = document.getElementById('result');
+      result.innerHTML = `<strong>Total:</strong> ${total} / ${maxTotal} &nbsp; <strong>Target</strong>: ${targetTotal}<br>` +
+        breakdown.map(b=>`<span class="summary-badge">${b.key.toUpperCase()}: ${b.score}/${b.max} (target ${b.target})</span>`).join('') +
+        interpretation(total, breakdown);
+
+      // update per-category UI (score + progress)
+      breakdown.forEach(b=>{
+        const node = document.querySelector(`.category[data-key="${b.key}"]`);
+        if(!node) return;
+        const scoreEl = node.querySelector('.cat-score');
+        const fill = node.querySelector('.progress-fill');
+        if(scoreEl) scoreEl.textContent = `${b.score} / ${b.max}`;
+        if(fill){
+          const pct = Math.round((b.score / b.max) * 100);
+          fill.style.width = pct + '%';
+          fill.style.background = b.score >= b.target ? 'linear-gradient(90deg,var(--accent-600),var(--accent))' : 'linear-gradient(90deg,#f59e0b,#f97316)';
+        }
+      });
+    }
+
+    function interpretation(total, breakdown){
+      let text = '<div style="margin-top:8px">';
+      if(total < 80) text += '<strong style="color:#c02626">&nbsp;Interpretation:&nbsp;Not ready (build fundamentals)</strong>';
+      else if(total < 100) text += '<strong style="color:#d97706">&nbsp;Interpretation:&nbsp;Borderline (interview-dependent)</strong>';
+      else if(total < 115) text += '<strong style="color:#0c8599">&nbsp;Interpretation:&nbsp;Strong SDE-2 candidate</strong>';
+      else text += '<strong style="color:#047857">&nbsp;Interpretation:&nbsp;Consistently hireable</strong>';
+      text += '</div>';
+
+      // red flags
+      const redFlags = [];
+      const con = breakdown.find(b=>b.key==='concurrency');
+      const lld = breakdown.find(b=>b.key==='lld');
+      if(con && con.score < 10) redFlags.push('Concurrency score < 10');
+      if(lld && lld.score < 12) redFlags.push('LLD < 12');
+      if(redFlags.length) text += `<div style="margin-top:8px;color:#b91c1c"><strong>Red flags:</strong> ${redFlags.join('; ')}</div>`;
+      return text;
+    }
+
+    function saveState(){
+      const data = {};
+      rubricData.forEach(cat=>{
+        data[cat.key] = [];
+        cat.items.forEach((it,idx)=>{
+          const name = `${cat.key}_${idx}`;
+          const sel = document.querySelector(`input[name="${name}"]:checked`);
+          data[cat.key][idx] = sel ? Number(sel.value) : 0;
+        });
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return {};
+      try{ return JSON.parse(raw); }catch(e){return {}};
+    }
+
+    function applyLoaded(){
+      const data = loadState();
+      Object.keys(data).forEach(catKey=>{
+        data[catKey].forEach((val,idx)=>{
+          const name = `${catKey}_${idx}`;
+          const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+          if(el) el.checked = true;
+        });
+      });
+    }
+
+    document.getElementById('reset').addEventListener('click', ()=>{
+      if(!confirm('Reset all saved scores?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      Array.from(document.querySelectorAll('input[type=radio]')).forEach(i=>i.checked=false);
+      compute();
+    });
+
+    // Export/Import/Open Markdown buttons removed from UI — handlers cleaned up
+
+    // init
+    build(); applyLoaded(); compute();
+  </script>
+</body>
+</html>

@@ -25,7 +25,7 @@ A curated study repository for software-engineer interview preparation covering 
 
 ## Quick Links
 
-- Open the interactive rubric in your browser from the repo: [SDE-2 SELF-ASSESSMENT RUBRIC.html](SDE-2%20SELF-ASSESSMENT%20RUBRIC.html)
+- Open the interactive rubric in your browser from the repo: [SDE-2 SELF-ASSESSMENT RUBRIC.html](https://karthikreddy-7.github.io/SDE-Prep/SDE-2%20SELF-ASSESSMENT%20RUBRIC.html)
 
 ## Conventions
 
